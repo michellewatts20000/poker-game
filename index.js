@@ -18,8 +18,8 @@ const init = () => {
             player1Hands.push(readytopush);
             player2Hands.push(readytopush2);
             // player one vs player two
-            play(player1Hands[i], player2Hands[i])
 
+            compareHands(player1Hands[i], player2Hands[i])
         }
         console.log("Player 1:", player1, "Player 2:", player2)
         if (player1 > player2) {
@@ -92,9 +92,4 @@ function compareHands(h1, h2) {
         }
     }
     return d1.rank < d2.rank ? `${++player1}` : `${++player2}`
-}
-
-
-function play(h1, h2) {
-    compareHands(h1, h2)
 }
