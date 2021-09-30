@@ -1,9 +1,11 @@
-# Poker Hand Sorter
+# Poker Hand Sorter in JavaScript
 
-## Language
+### Instructions
 
-Javascript
+1. Open your terminal or preferred code editor.
+2. Make sure Node.js is installed on your machine (a quick way to check is by running 'node -v')
+3. run: "node index.js" in the command line.
 
-### How to run
+### Expected output
 
-Open your terminal or preferred code editor, make sure Node.js is installed on your machine, run: "node index.js" in the command line.
+![alt text](output.png)

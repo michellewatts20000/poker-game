@@ -20,7 +20,8 @@ const init = () => {
             // player one vs player two
             compareHands(player1Hands[i], player2Hands[i])
         }
-        console.log("Player 1:", player1, "Player 2:", player2)
+        console.log("Player 1:", player1)
+        console.log("Player 2:", player2)
         if (player1 > player2) {
             console.log(`Congratulations Player 1!`)
         } else if (player2 > player1) {
