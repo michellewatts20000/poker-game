@@ -4,7 +4,7 @@ let player1 = 0;
 let player2 = 0;
 let player1Hands = [];
 let player2Hands = [];
-const order = "23456789TJQKA"
+const scale = "23456789TJQKA"
 
 const init = () => {
     try {
@@ -17,8 +17,7 @@ const init = () => {
             let readytopush2 = rows[i].slice(games + 1, games * 2);
             player1Hands.push(readytopush);
             player2Hands.push(readytopush2);
-            // player one vs player two
-            compareHands(player1Hands[i], player2Hands[i])
+            winningHand(player1Hands[i], player2Hands[i])
         }
         console.log("Player 1:", player1)
         console.log("Player 2:", player2)
@@ -37,13 +36,13 @@ const init = () => {
 
 const getHandDetails = (hand) => {
     const cards = hand.split(" ")
-    const faces = cards.map(a => String.fromCharCode([77 - order.indexOf(a[0])])).sort()
+    const newOrder = cards.map(a => String.fromCharCode([77 - scale.indexOf(a[0])])).sort()
     const suits = cards.map(a => a[1]).sort()
-    const counts = faces.reduce(count, {})
+    const counts = newOrder.reduce(count, {})
     const duplicates = Object.values(counts).reduce(count, {})
     const flush = suits[0] === suits[4]
-    const first = faces[0].charCodeAt(0)
-    const straight = faces.every((f, index) => f.charCodeAt(0) - first === index)
+    const firstUnicode = newOrder[0].charCodeAt(0)
+    const straight = newOrder.every((f, index) => f.charCodeAt(0) - firstUnicode === index)
     let rank =
         (flush && straight && 1) ||
         (duplicates[4] && 2) ||
@@ -55,7 +54,7 @@ const getHandDetails = (hand) => {
         (duplicates[2] && 8) || 9
     return {
         rank,
-        value: faces.sort(byCountFirst).join("")
+        value: newOrder.sort(byCountFirst).join("")
     }
 
     function byCountFirst(a, b) {
@@ -70,19 +69,19 @@ const getHandDetails = (hand) => {
     }
 }
 
-const compareHands = (h1, h2) => {
-    let d1 = getHandDetails(h1)
-    let d2 = getHandDetails(h2)
-    if (d1.rank === d2.rank) {
-        if (d1.value < d2.value) {
+const winningHand = (h1, h2) => {
+    let deal1 = getHandDetails(h1)
+    let deal2 = getHandDetails(h2)
+    if (deal1.rank === deal2.rank) {
+        if (deal1.value < deal2.value) {
             return ++player1
-        } else if (d1.value > d2.value) {
+        } else if (deal1.value > deal2.value) {
             return ++player2
         } else {
             return "Draw"
         }
     }
-    return d1.rank < d2.rank ? `${++player1}` : `${++player2}`
+    return deal1.rank < deal2.rank ? `${++player1}` : `${++player2}`
 }
 
 init();
