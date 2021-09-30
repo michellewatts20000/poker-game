@@ -7,9 +7,9 @@ let player2Hands = [];
 const order = "23456789TJQKA"
 
 const init = () => {
-    // read the poker-hands.txt file and split into lines and hands
     try {
-        let data = fs.readFileSync('poker-hands-short.txt', 'utf8')
+        // read the poker-hands.txt file and split into lines and hands
+        let data = fs.readFileSync('poker-hands.txt', 'utf8')
         let rows = data.split('\n');
         for (let i = 0; i < rows.length; i++) {
             let games = rows[i].length / 2
@@ -33,8 +33,6 @@ const init = () => {
         console.error(err)
     }
 };
-
-
 
 const getHandDetails = (hand) => {
     const cards = hand.split(" ")
