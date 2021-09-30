@@ -39,19 +39,19 @@ const getHandDetails = (hand) => {
     const newOrder = cards.map(a => String.fromCharCode([77 - scale.indexOf(a[0])])).sort()
     const suits = cards.map(a => a[1]).sort()
     const counts = newOrder.reduce(count, {})
-    const duplicates = Object.values(counts).reduce(count, {})
+    const multiples = Object.values(counts).reduce(count, {})
     const flush = suits[0] === suits[4]
     const firstUnicode = newOrder[0].charCodeAt(0)
     const straight = newOrder.every((f, index) => f.charCodeAt(0) - firstUnicode === index)
     let rank =
         (flush && straight && 1) ||
-        (duplicates[4] && 2) ||
-        (duplicates[3] && duplicates[2] && 3) ||
+        (multiples[4] && 2) ||
+        (multiples[3] && multiples[2] && 3) ||
         (flush && 4) ||
         (straight && 5) ||
-        (duplicates[3] && 6) ||
-        (duplicates[2] > 1 && 7) ||
-        (duplicates[2] && 8) || 9
+        (multiples[3] && 6) ||
+        (multiples[2] > 1 && 7) ||
+        (multiples[2] && 8) || 9
     return {
         rank,
         value: newOrder.sort(byCountFirst).join("")
