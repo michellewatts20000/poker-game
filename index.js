@@ -9,7 +9,7 @@ const scale = "23456789TJQKA"
 const init = () => {
     try {
         // read the poker-hands.txt file
-        let data = fs.readFileSync('poker-hands-short.txt', 'utf8')
+        let data = fs.readFileSync('poker-hands.txt', 'utf8')
         //  turn rows from poker-hands.txt into strings
         let rows = data.split('\n');
         // Loop through every row and split each row into 2 equal strings that represent player1 and player2 hands 
@@ -80,13 +80,13 @@ console.log(counts)
 
     // make a new array containing all the suits, sort them so the 1st item in the object needs to match the 5th
     const suits = cards.map(a => a[1]).sort()
-    // it's a flush if the 1st and the 5th suit in the array are the same
+    // it's a flush if the 1st and the 5th suit in the array are the same - will be either true or false
     const flush = suits[0] === suits[4]
 
     // take the first item in the newOrder array and give it a character code to compare its value
     const firstUnicode = newOrder[0].charCodeAt(0)
  
-    // for every item in the newOrder array check it against the firstUnicode to see if they are going up incrementally by one and therefore is a straight
+    // for every item in the newOrder array check it against the firstUnicode to see if they are going up incrementally by one and therefore is a straight - will be either true or false.
     const straight = newOrder.every((f, index) => f.charCodeAt(0) - firstUnicode === index)
    
     // give the players hand a rank
@@ -99,6 +99,7 @@ console.log(counts)
         (multiples[3] && 6) ||
         (multiples[2] > 1 && 7) ||
         (multiples[2] && 8) || 9
+        console.log(rank)
     return {
         rank,
         value: newOrder.sort(byCountFirst).join("")
