@@ -1,9 +1,14 @@
 const fs = require('fs')
 
+// variables for score keeping
 let player1 = 0;
 let player2 = 0;
+
+// empty arrays where each players hands are kept
 let player1Hands = [];
 let player2Hands = [];
+
+// least valuable to most valuable cards
 const scale = "23456789TJQKA"
 
 const init = () => {
@@ -48,63 +53,74 @@ const winningHand = (h1, h2) => {
     // call the function getHandDetails on both players hands
     let deal1 = getHandDetails(h1)
     let deal2 = getHandDetails(h2)
-
-    // if player1 and player2 are equal in rank run the outer if statment
+    // if player1 and player2 are not equal in rank run the outer if statement
     if (deal1.rank === deal2.rank) {
-        // if player1 and player2 are not equal in rank, but player1 has a lower value add +1 to player1 variable
+        // if player1 and player2 are equal in rank, but player1 has a lower value add +1 to player1 variable
         if (deal1.value < deal2.value) {
             return ++player1
-            // if player1 and player2 are not equal in rank, but player2 has a lower value add +1 to player2 variable
+            // if player1 and player2 are equal in rank, but player2 has a lower value add +1 to player2 variable
         } else if (deal1.value > deal2.value) {
             return ++player2
         } else {
-            // if player1 and player2 are not equal in rank, and player1 is equal to player2 return a draw
+            // if player1 and player2 are equal in rank, and player1 is equal to player2 in value return a draw
             return "Draw"
         }
     }
-    // if player 1 has a lower rank than player 2 using a ternary operator add +1 to player1 if not add +1 to player2
-    return deal1.rank < deal2.rank ? `${++player1}` : `${++player2}`
+    // if player 1 has a higher rank than player 2 using a ternary operator add +1 to player1 if not add +1 to player2
+    return deal1.rank > deal2.rank ? `${++player1}` : `${++player2}`
 }
 
 const getHandDetails = (hand) => {
     // split each hand into card strings e.g "TD", "TC", "6C", "KD", "2H"
     const cards = hand.split(" ")
-    // make a new array from cards, assign a value using UTF-16 to the first character in the string to identify duplicates... calling on the "scale" variable to determine how valuable the card is
+    // make a new array from cards, assign a value using UTF-16 to the first character in the string to identify duplicates... calling on the "scale" variable to determine how valuable the card is.
     const newOrder = cards.map(a => String.fromCharCode([77 - scale.indexOf(a[0])])).sort()
 
     // find if there are any duplicates by using the reduce method and calling the count function
     const counts = newOrder.reduce(count, {})
-console.log(counts)
+
     // takes the values in the counts object and runs the reduce method returning an object that shows how many muliple cards a player has  
     const multiples = Object.values(counts).reduce(count, {})
 
     // make a new array containing all the suits, sort them so the 1st item in the object needs to match the 5th
     const suits = cards.map(a => a[1]).sort()
+    
     // it's a flush if the 1st and the 5th suit in the array are the same - will be either true or false
     const flush = suits[0] === suits[4]
 
     // take the first item in the newOrder array and give it a character code to compare its value
     const firstUnicode = newOrder[0].charCodeAt(0)
- 
+
     // for every item in the newOrder array check it against the firstUnicode to see if they are going up incrementally by one and therefore is a straight - will be either true or false.
     const straight = newOrder.every((f, index) => f.charCodeAt(0) - firstUnicode === index)
-   
+
     // give the players hand a rank
     let rank =
-        (flush && straight && 1) ||
-        (multiples[4] && 2) ||
-        (multiples[3] && multiples[2] && 3) ||
-        (flush && 4) ||
+        // highest rank - straight flush (royal flush is resolved in the draw function)
+        (flush && straight && 9) ||
+        // four of a kind
+        (multiples[4] && 8) ||
+        // full house
+        (multiples[3] && multiples[2] && 7) ||
+        // flush
+        (flush && 6) ||
+        // straight
         (straight && 5) ||
-        (multiples[3] && 6) ||
-        (multiples[2] > 1 && 7) ||
-        (multiples[2] && 8) || 9
-        console.log(rank)
+        // 3 of a kind
+        (multiples[3] && 4) ||
+        // one pair
+        (multiples[2] > 1 && 3) ||
+        // lowest rank - high hand
+        (multiples[2] && 2) || 1
+
+        // create object for each players hand to be used back in the winningHand function
     return {
         rank,
         value: newOrder.sort(byCountFirst).join("")
     }
 
+
+    // move multiples of cards to the front of the string to use in comparing card values
     function byCountFirst(a, b) {
         const countDiff = counts[b] - counts[a]
         if (countDiff) return countDiff
